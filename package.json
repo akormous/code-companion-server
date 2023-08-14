@@ -22,11 +22,17 @@
   },
   "homepage": "https://github.com/akormous/code-companion-server#readme",
   "dependencies": {
+    "@types/ws": "^8.5.5",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "swagger-autogen": "^2.23.5",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "winston": "^3.10.0",
+    "ws": "^8.13.0",
+    "y-websocket": "^1.5.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/node": "^20.4.5",
     "@types/swagger-ui-express": "^4.1.3",
