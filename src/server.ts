@@ -7,17 +7,22 @@ import cors from 'cors';
 import { logger } from './logger';
 import { WebSocketServer } from 'ws';
 const setupWSConnection = require('y-websocket/bin/utils').setupWSConnection;
+import { MongoDBService } from './v1/services/MongoDBService';
+import { SocketIOService } from './v1/services/SocketIOService';
 
 /**
- * Configuration
+ * CORSConfiguration
  */
 const allowedOrigins = ['http://localhost:5173'];
 
 /**
- * Server initialization
+ * Server INITIALIZATION and CONFIGURATION
+ * CORS configuration
+ * Request body parsing
+ * Serve swagger documentation at domain/doc
+ * API v1
  */
 const app = express();
-// set CORS configuration
 app.use(cors(
   {
     origin: allowedOrigins,
@@ -26,70 +31,43 @@ app.use(cors(
     credentials: true
   }
 ));
-// parser incoming request body to json
 app.use(express.json());
-
-/**
- * API version 1
- */
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use('/api/v1', app_v1);
 
-/**
- * Serving swagger documentation at /doc
- */
-app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 /**
  * Create an http server
  */
-const httpServer = createServer(app);
+export const httpServer = createServer(app);
 
 /**
  * Create a wss (Web Socket Secure) server
  */
-const wss = new WebSocketServer({server: httpServer})
+export const wss = new WebSocketServer({server: httpServer})
 
 function onError(error: any) {
-  console.log(typeof(error));
   logger.info(error);
 }
 
 function onListening() {
   logger.info("Listening")
 }
+
 httpServer.on('error', onError);
 httpServer.on('listening', onListening);
 
-wss.on('connection', (...args) => {
-  logger.info("wss:connection");
-  args.keys();
 
-  setupWSConnection(...args);
+wss.on('connection', (ws, req) => {
+  logger.info("wss:connection");
+  setupWSConnection(ws, req);
 })
 
-/**
- * Create a web socket server
- */
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: allowedOrigins,
-//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   }
-// });
-
-// /**
-//  * Web Socket on event connection
-// */
-// io.on('connection', (socket) => {
-//   logger.info("Connected " + socket.id);
-//   socket.on('send_message', (message) => {
-//     logger.info("Received message: " + message.message);
-//     socket.emit('get_message', { message: "Server acknowledges your existence " + socket.id });
-//   });
-// });
-
-
-
+export const socketIOService = new SocketIOService(httpServer);
+// enter your username and password
+export const mongoDbService = new MongoDBService('iamakshatchauhan', 'UEQoALaAYhrtxPOV');
 httpServer.listen(3000, () => {
+  mongoDbService.disconnect();
+  mongoDbService.connect().catch(err => logger.error(err));
   logger.info("Server listening on port: 3000");
 });

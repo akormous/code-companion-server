@@ -25,6 +25,8 @@
     "@types/ws": "^8.5.5",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "mongoose": "^7.4.3",
+    "socket.io": "^4.7.2",
     "swagger-autogen": "^2.23.5",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.10.0",
