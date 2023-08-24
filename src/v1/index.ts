@@ -20,15 +20,17 @@ app_v1.get('/', (req: Request, res: Response) => {
  * Create a Room
  */
 app_v1.post('/room/create', async (req: Request, res: Response) => {
+    // #swagger.description = 'Create a code room'
     const roomId = Math.random().toString(36).substring(2, 8);
     const room = await mongoDbService.createRoom(req.body.name, roomId, new Date());
     res.send(room);
 })
 
 /**
- * Check if room exists
+ * Get room details
  */
 app_v1.get('/room/', async (req: Request, res: Response) => {
+    // #swagger.description = 'Get code room details'
     const roomId: string = req.query.roomId as string;
     const room = await mongoDbService.getRoomById(roomId);
     if(room == null) {
@@ -44,6 +46,7 @@ app_v1.get('/room/', async (req: Request, res: Response) => {
  * Join a Room
  */
 app_v1.post('/room/join', async (req: Request, res: Response) => {
+    // #swagger.description = 'Join an existing code room'
     await mongoDbService.addParticipant(req.body.name, req.body.roomId);
     const room = await mongoDbService.getRoomById(req.body.roomId);
     socketIOService.emitParticipantJoin(room!);
@@ -55,6 +58,7 @@ app_v1.post('/room/join', async (req: Request, res: Response) => {
  * Change programming language for a room
  */
 app_v1.patch('/room/language', async (req: Request, res: Response) => {
+    // #swagger.description = 'Change programming language for a code room'
     await mongoDbService.changeLanguage(req.body.programmingLanguage, req.body.roomId);
     const room = await mongoDbService.getRoomById(req.body.roomId);
     res.send(room);

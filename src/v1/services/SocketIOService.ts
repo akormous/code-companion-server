@@ -20,9 +20,6 @@ export class SocketIOService {
 
         this.io.on('connection', (socket) => {
             logger.info("Connected via socket IO");
-            socket.emit('participant:addserver', "connect ho gaya")
-
-
             /**
              * Participant add event
              */
