@@ -2,7 +2,7 @@ import { Schema, model, connect, disconnect, Model } from 'mongoose';
 import { logger } from '../../logger';
 import { IRoom } from '../models/interfaces';
 import { ProgrammingLanguages } from '../models/enums';
-
+import { dbHost } from '../../server';
 
 export class MongoDBService {
     roomSchema: Schema<IRoom>;
@@ -24,7 +24,7 @@ export class MongoDBService {
     }
 
     public async connect() {
-        await connect('mongodb+srv://' + this.username + ':' + this.password + '@code-companion-db.7nhruus.mongodb.net/?retryWrites=true&w=majority');
+        await connect('mongodb+srv://' + this.username + ':' + this.password + dbHost + '/?retryWrites=true&w=majority');
         logger.info("MongoDB connected successfully.")    
     }
 

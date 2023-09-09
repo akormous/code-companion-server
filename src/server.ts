@@ -9,6 +9,15 @@ import { WebSocketServer } from 'ws';
 const setupWSConnection = require('y-websocket/bin/utils').setupWSConnection;
 import { MongoDBService } from './v1/services/MongoDBService';
 import { SocketIOService } from './v1/services/SocketIOService';
+import * as dotenv from 'dotenv';
+
+/**
+ * Loading environment variables
+ */
+dotenv.config();
+export const dbHost: string | undefined = process.env.DB_HOST;
+const dbUser: string | undefined = process.env.DB_USER;
+const dbPassword: string | undefined = process.env.DB_PASSWORD;
 
 /**
  * CORSConfiguration
@@ -65,7 +74,7 @@ wss.on('connection', (ws, req) => {
 
 export const socketIOService = new SocketIOService(httpServer);
 // enter your username and password
-export const mongoDbService = new MongoDBService('iamakshatchauhan', 'UEQoALaAYhrtxPOV');
+export const mongoDbService = new MongoDBService(dbUser!, dbPassword!);
 httpServer.listen(3000, () => {
   mongoDbService.disconnect();
   mongoDbService.connect().catch(err => logger.error(err));

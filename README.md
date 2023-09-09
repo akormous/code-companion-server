@@ -11,6 +11,13 @@ To install, simply execute the following command at the root of the repository
 
 `npm i`
 
+## Database setup
+
+Create a `.env` file at the root of the repository, with your database credentials. 3 variables are required
+- DB_HOST
+- DB_USER
+- DB_PASSWORD
+
 
 ## Build and Run
 
