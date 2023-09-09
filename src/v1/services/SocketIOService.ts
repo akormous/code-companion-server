@@ -13,7 +13,7 @@ export class SocketIOService {
     constructor(httpServer: HttpServer) {
         this.io = new Server(httpServer, {
             cors: {
-                origin: "http://localhost:5173"
+                origin: "https://code-companion.netlify.app"
             }
         });
 

@@ -22,7 +22,7 @@ const dbPassword: string | undefined = process.env.DB_PASSWORD;
 /**
  * CORSConfiguration
  */
-const allowedOrigins = ['http://localhost:5173', 'https://code-companion.netlify.app'];
+const allowedOrigins = ['https://code-companion.netlify.app'];
 
 /**
  * Server INITIALIZATION and CONFIGURATION
