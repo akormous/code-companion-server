@@ -15,14 +15,14 @@ import * as dotenv from 'dotenv';
  * Loading environment variables
  */
 dotenv.config();
-export const dbHost: string | undefined = process.env.DB_HOST;
-const dbUser: string | undefined = process.env.DB_USER;
-const dbPassword: string | undefined = process.env.DB_PASSWORD;
+export const mongoUri: string = process.env.MONGODB_URI || '';
 
 /**
  * CORSConfiguration
  */
-const allowedOrigins = ['https://code-companion.netlify.app'];
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173'];
 
 /**
  * Server INITIALIZATION and CONFIGURATION
@@ -73,10 +73,10 @@ wss.on('connection', (ws, req) => {
 })
 
 export const socketIOService = new SocketIOService(httpServer);
-// enter your username and password
-export const mongoDbService = new MongoDBService(dbUser!, dbPassword!);
-httpServer.listen(3000, () => {
+export const mongoDbService = new MongoDBService();
+const PORT = process.env.PORT || 3000;
+httpServer.listen(PORT, () => {
   mongoDbService.disconnect();
   mongoDbService.connect().catch(err => logger.error(err));
-  logger.info("Server listening on port: 3000");
+  logger.info(`Server listening on port: ${PORT}`);
 });

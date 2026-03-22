@@ -2,21 +2,17 @@ import { Schema, model, connect, disconnect, Model } from 'mongoose';
 import { logger } from '../../logger';
 import { IRoom } from '../models/interfaces';
 import { ProgrammingLanguages } from '../models/enums';
-import { dbHost } from '../../server';
+import { mongoUri } from '../../server';
 
 export class MongoDBService {
     roomSchema: Schema<IRoom>;
     Room: Model<IRoom>;
-    username: string;
-    password: string;
 
-    constructor(username: string, password: string) {
-        this.username = username;
-        this.password = password;
+    constructor() {
         this.roomSchema = new Schema<IRoom>({
             roomId: {type: String, required: true},
             owner: {type: String, required: true},
-            dateCreated: {type: Date, required: true}, 
+            dateCreated: {type: Date, required: true},
             participants: {type: [String], required: true },
             programmingLanguage: {type: String, enum: ProgrammingLanguages, required: true}
         });
@@ -24,8 +20,8 @@ export class MongoDBService {
     }
 
     public async connect() {
-        await connect('mongodb+srv://' + this.username + ':' + this.password + dbHost + '/?retryWrites=true&w=majority');
-        logger.info("MongoDB connected successfully.")    
+        await connect(mongoUri);
+        logger.info('MongoDB connected successfully.');
     }
 
     public async disconnect() {
